@@ -1,5 +1,5 @@
 #include <gtest/gtest.h>
-#include "bset.hpp"
+#include "set.hpp"
 
 TEST(OtherTests, parseSet) {
     Set set;
