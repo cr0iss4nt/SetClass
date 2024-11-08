@@ -25,5 +25,7 @@ public:
 };
 
 Set parseSet(string setString);
+void parseSet_closingBracket(string setString, Set& result, int index, int& elementStart, int& depth, int& subsetStart);
+void parseSet_finishElement(string setString, Set& result, int index, int& elementStart, int& depth);
 
 bool isSet(string element);
