@@ -185,27 +185,37 @@ Set parseSet(string setString) {
                 subsetStart = index;
             depth++;
         }
-        else if (setString[index] == '}') {
-            if (elementStart && depth==1) {
-                result.addElement(setString.substr(elementStart, index - elementStart));
-                elementStart = 0;
-            }
-
-            depth--;
-            if (depth == 1 && setString!=",{}") {
-                result.addElement(setString.substr(subsetStart, index - subsetStart + 1));
-                if (index != setString.length() - 2 && setString[index + 1] == ',')
-                    index++;
-            }
-        }
-        else if (setString[index] == ',' && depth == 1 && elementStart) {
-            if (setString.substr(elementStart, index - elementStart)!=",{}")
-                result.addElement(setString.substr(elementStart, index - elementStart));
-            elementStart = 0;
-        }
+        else if (setString[index] == '}')
+            parseSet_closingBracket(setString, result, index, elementStart, depth, subsetStart);
+        else if (setString[index] == ',')
+            parseSet_finishElement(setString, result, index, elementStart, depth);
         else if (depth == 1 && !elementStart) {
             elementStart = index;
         }
     }
     return result;
+}
+
+void parseSet_closingBracket(string setString, Set& result, int index, int& elementStart, int& depth, int& subsetStart)
+{
+    if (elementStart && depth==1) {
+        result.addElement(setString.substr(elementStart, index - elementStart));
+        elementStart = 0;
+    }
+
+    depth--;
+    if (depth == 1 && setString!=",{}") {
+        result.addElement(setString.substr(subsetStart, index - subsetStart + 1));
+        if (index != setString.length() - 2 && setString[index + 1] == ',')
+            index++;
+    }
+}
+
+void parseSet_finishElement(string setString, Set& result, int index, int& elementStart, int& depth)
+{
+    if (depth == 1 && elementStart) {
+        if (setString.substr(elementStart, index - elementStart)!=",{}")
+            result.addElement(setString.substr(elementStart, index - elementStart));
+        elementStart = 0;
+    }
 }
